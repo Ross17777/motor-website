@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MotoCheck</title>
+  <meta name="description" content="二手摩托验车与保养信息助手" />
+  <style>
+    * { box-sizing: border-box; }
+    body { margin: 0; min-width: 320px; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Microsoft YaHei", sans-serif; color: #f4f4f5; background: radial-gradient(circle at top left, rgba(249,115,22,.16), transparent 360px), linear-gradient(180deg,#0b0d10,#12161c 48%,#0b0d10); }
+    button, input { font: inherit; }
+    button { cursor: pointer; }
+    .wrap { width: min(100%, 760px); margin: 0 auto; padding: 0 16px; }
+    .hero { position: relative; min-height: 620px; overflow: hidden; padding: 20px 0 36px; background: #0b0d10; }
+    .hero::before { content: ""; position: absolute; inset: 0; background: linear-gradient(90deg, rgba(11,13,16,.98), rgba(11,13,16,.72) 48%, rgba(11,13,16,.25)), url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 760'%3E%3Crect width='1200' height='760' fill='%2311161d'/%3E%3Crect y='515' width='1200' height='245' fill='%230d1015'/%3E%3Cpath d='M460 385C520 296 636 241 786 239c98-1 182 31 251 98l-33 83c-104-54-217-76-344-66-85 7-153 28-200 31z' fill='%23d8dee7'/%3E%3Cpath d='M500 395c78-61 181-91 308-87 69 2 131 18 186 48l-29 50c-144-45-284-47-418 2z' fill='%2311151b'/%3E%3Cpath d='M674 230h165c31 0 54 23 57 53H678z' fill='%23f97316'/%3E%3Ccircle cx='410' cy='510' r='132' fill='%2308090b'/%3E%3Ccircle cx='410' cy='510' r='98' fill='none' stroke='%23cbd5e1' stroke-width='18'/%3E%3Ccircle cx='410' cy='510' r='58' fill='none' stroke='%23434b57' stroke-width='8'/%3E%3Ccircle cx='890' cy='510' r='132' fill='%2308090b'/%3E%3Ccircle cx='890' cy='510' r='98' fill='none' stroke='%23cbd5e1' stroke-width='18'/%3E%3Ccircle cx='890' cy='510' r='55' fill='none' stroke='%23424a54' stroke-width='8'/%3E%3Cpath d='M543 420c90 24 189 25 291 4' fill='none' stroke='%2311151b' stroke-width='18' stroke-linecap='round'/%3E%3Cpath d='M554 431c84 23 170 24 264 5' fill='none' stroke='%23f97316' stroke-width='5' stroke-dasharray='12 12' stroke-linecap='round'/%3E%3Crect x='120' y='438' width='150' height='190' rx='8' fill='%23e5e7eb' opacity='.92'/%3E%3Cpath d='M122 438h146v28H122z' fill='%23f97316'/%3E%3C/svg%3E") center / cover no-repeat; }
+    .hero::after { content: ""; position: absolute; inset: auto 0 0 0; height: 180px; background: linear-gradient(transparent,#0b0d10); }
+    .hero-content { position: relative; z-index: 1; }
+    header { display: flex; justify-content: space-between; align-items: center; padding: 2px 0; }
+    .brand { font-size: 22px; font-weight: 900; color: #fff; }
+    .subtitle { margin-top: 2px; font-size: 12px; color: #d4d4d8; }
+    .pill { display: inline-flex; border: 1px solid rgba(251,146,60,.45); background: rgba(249,115,22,.13); color: #fed7aa; padding: 5px 11px; border-radius: 999px; font-size: 12px; font-weight: 700; }
+    .hero-main { padding-top: 92px; }
+    .eyebrow { display: inline-flex; border: 1px solid #3f3f46; background: rgba(0,0,0,.36); padding: 5px 11px; border-radius: 999px; color: #e4e4e7; font-size: 12px; }
+    h1 { margin: 14px 0 0; max-width: 560px; font-size: 40px; line-height: 1.08; letter-spacing: 0; color: #fff; }
+    .intro { max-width: 540px; margin: 16px 0 0; color: #d4d4d8; line-height: 1.75; }
+    .search { display: flex; gap: 8px; margin-top: 28px; }
+    .search input { flex: 1; min-width: 0; height: 48px; border: 1px solid #52525b; background: rgba(0,0,0,.58); color: #fff; padding: 0 14px; outline: 0; }
+    .search input:focus { border-color: #fb923c; box-shadow: 0 0 0 3px rgba(249,115,22,.25); }
+    .search button, .back { border: 0; background: #f97316; color: #111; height: 48px; padding: 0 18px; font-weight: 900; }
+    .not-found { display: none; margin-top: 14px; border-left: 4px solid #f97316; background: rgba(0,0,0,.46); padding: 14px; color: #f4f4f5; }
+    .models { padding: 18px 0 28px; }
+    .section-title { margin: 0 0 12px; color: #d4d4d8; font-size: 14px; }
+    .model-grid { display: grid; gap: 12px; }
+    .model-card { min-height: 96px; text-align: left; border: 1px solid #27272a; background: #1e242c; color: #fff; padding: 15px; box-shadow: 0 18px 44px rgba(0,0,0,.28); }
+    .model-card span { display: block; color: #a1a1aa; font-size: 13px; }
+    .model-card strong { display: block; margin-top: 5px; font-size: 18px; }
+    .model-card small { display: block; margin-top: 9px; color: #71717a; }
+    .result { display: none; min-height: 100vh; background: #0b0d10; }
+    .topbar { position: sticky; top: 0; z-index: 10; background: rgba(11,13,16,.94); backdrop-filter: blur(12px); border-bottom: 1px solid #27272a; padding: 12px 0; }
+    .topbar .wrap { display: flex; justify-content: space-between; gap: 12px; align-items: center; }
+    .topbar .search { margin: 0; width: 170px; }
+    .topbar .search input { height: 40px; font-size: 13px; }
+    .topbar .search button { height: 40px; padding: 0 10px; font-size: 13px; }
+    .back { height: auto; padding: 0; color: #fff; background: transparent; text-align: left; }
+    .back small { display: block; color: #a1a1aa; font-weight: 500; }
+    .content { padding: 20px 0 28px; }
+    .summary, .panel { border: 1px solid #27272a; background: #15191f; box-shadow: 0 18px 44px rgba(0,0,0,.28); }
+    .summary { padding: 18px; display: flex; justify-content: space-between; gap: 14px; align-items: flex-start; }
+    .summary p { margin: 0 0 4px; color: #fdba74; font-size: 14px; }
+    .summary h2 { margin: 0; font-size: 30px; color: #fff; }
+    .summary .desc { margin-top: 8px; color: #d4d4d8; line-height: 1.6; }
+    .risk { flex: 0 0 auto; border: 1px solid rgba(251,146,60,.6); background: rgba(249,115,22,.14); color: #fed7aa; padding: 6px 10px; font-weight: 900; }
+    .panel { margin-top: 14px; border-left: 4px solid #f97316; padding: 16px; }
+    .panel.alt { border-left-color: #2dd4bf; }
+    .panel h3 { margin: 0 0 14px; font-size: 19px; color: #fff; }
+    .kv { display: grid; gap: 8px; }
+    .row { display: flex; justify-content: space-between; gap: 16px; border-bottom: 1px solid #27272a; padding: 9px 0; font-size: 14px; }
+    .row span:first-child { color: #a1a1aa; flex: 0 0 auto; }
+    .row span:last-child { color: #fff; font-weight: 700; text-align: right; }
+    .checks { display: grid; gap: 8px; }
+    .check { display: flex; gap: 11px; align-items: flex-start; border: 1px solid #27272a; background: #1e242c; padding: 12px; line-height: 1.55; font-size: 14px; }
+    .check input { margin-top: 4px; accent-color: #f97316; }
+    .parts { display: grid; gap: 10px; }
+    .part { border: 1px solid #27272a; background: #1e242c; padding: 12px; }
+    .part-head { display: flex; justify-content: space-between; gap: 10px; align-items: center; }
+    .part h4 { margin: 0; font-size: 16px; }
+    .part em { font-style: normal; border: 1px solid #52525b; color: #d4d4d8; padding: 4px 7px; font-size: 12px; }
+    .part p { margin: 8px 0 0; color: #d4d4d8; line-height: 1.65; font-size: 14px; }
+    .chips { display: grid; gap: 10px; margin-top: 14px; }
+    .chip { border: 1px solid rgba(45,212,191,.35); background: rgba(45,212,191,.1); color: #ccfbf1; padding: 12px; }
+    .chip.orange { border-color: rgba(251,146,60,.35); background: rgba(249,115,22,.1); color: #ffedd5; }
+    .chip.blue { border-color: rgba(56,189,248,.35); background: rgba(14,165,233,.1); color: #e0f2fe; }
+    .chip b { display: block; font-size: 12px; margin-bottom: 4px; }
+    footer { padding: 0 0 28px; color: #71717a; font-size: 12px; line-height: 1.7; }
+    @media (min-width: 640px) { .model-grid, .chips { grid-template-columns: repeat(3, 1fr); } .kv.two { grid-template-columns: repeat(2, 1fr); column-gap: 18px; } .topbar .search { width: 260px; } }
+  </style>
+</head>
+<body>
+  <main id="home">
+    <section class="hero">
+      <div class="wrap hero-content">
+        <header>
+          <div><div class="brand">MotoCheck</div><div class="subtitle">二手摩托验车与保养信息助手</div></div>
+          <span class="pill">MVP</span>
+        </header>
+        <div class="hero-main">
+          <span class="eyebrow">输入车型，生成验车参考</span>
+          <h1>买二手摩托前，先把重点查清楚。</h1>
+          <p class="intro">输入或选择车型，快速查看基础参数、易损件、轮胎规格、保养用品和现场验车清单。</p>
+          <form class="search" data-search><input placeholder="例如：春风 450SR / DL250 / Ninja 400" /><button>查询</button></form>
+          <div class="not-found" id="notFound"></div>
+        </div>
+      </div>
+    </section>
+    <section class="wrap models"><h2 class="section-title">已收录车型</h2><div class="model-grid" id="modelGrid"></div></section>
+    <footer class="wrap">本工具提供的信息仅供参考，实际车况请以现场检查和专业维修人员判断为准。</footer>
+  </main>
+
+  <main id="result" class="result">
+    <div class="topbar"><div class="wrap"><button class="back" id="backBtn"><strong>MotoCheck</strong><small>返回首页</small></button><form class="search" data-search><input placeholder="搜索车型" /><button>查询</button></form></div></div>
+    <div class="wrap content" id="resultContent"></div>
+    <footer class="wrap">本工具提供的信息仅供参考，实际车况请以现场检查和专业维修人员判断为准。</footer>
+  </main>
+
+<script>
+const motorcycles = [
+  { slug:"cfmoto-450sr", name:"春风 450SR", brand:"春风", model:"450SR", aliases:["CFMOTO 450SR","春风450SR","450 SR","450sr"], basic:{brand:"春风",model:"450SR",displacement:"449.5 cc",engineType:"直列双缸，水冷，DOHC",seatHeight:"约 795 mm",curbWeight:"约 168 kg",fuelTank:"约 14 L",frontWheel:"110/70 R17",rearWheel:"150/60 R17",oemTires:"110/70 R17 + 150/60 R17",oilGrade:"10W-40 全合成",oilCapacity:"约 2.6 L，含机滤约 2.8 L",chainSpec:"520",batteryModel:"12V 8Ah 级别",sparkPlug:"NGK 9 号热值级别"}, tireInfo:{front:"110/70 R17",rear:"150/60 R17",alternatives:["前 120/70 R17 需确认轮圈和避震间隙","后 160/60 R17 需确认链条间隙"],commuting:"运动通勤胎，强调湿地和耐磨",sport:"运动街胎或半热熔街胎",touring:"运动旅行胎，优先耐磨和雨天稳定"}, maintenanceInfo:{oilViscosity:"10W-40",oilVolume:"约 2.6-2.8 L",oilFilter:"建议每次或隔次更换",brakeFluid:"DOT 4",coolant:"乙二醇基长效冷却液",chainLube:"每 500-800 km 清洁并上链条油，雨后补做",airFilter:"纸质滤芯，可升级高流量滤芯"}, buyingAdvice:{beginnerFriendly:"中等，动力比 250 级别更强，适合有基础的新手",commonIssues:["摔车外观件修复","链条保养不足","激烈驾驶导致轮胎和刹车磨损快"],riskLevel:"中",bargainingPoints:["外观件划痕","轮胎年份","刹车盘台阶","保养记录缺失"],priority:["手续一致性","车架摔车痕迹","发动机冷启动","刹车和轮胎"]} },
+  { slug:"haojue-suzuki-dl250", name:"豪爵铃木 DL250", brand:"豪爵铃木", model:"DL250", aliases:["Suzuki DL250","豪爵铃木DL250","DL 250","V-Strom 250"], basic:{brand:"豪爵铃木",model:"DL250",displacement:"248 cc",engineType:"直列双缸，水冷，SOHC",seatHeight:"约 795 mm",curbWeight:"约 206 kg",fuelTank:"约 17.3 L",frontWheel:"110/80 R17",rearWheel:"140/70 R17",oemTires:"110/80 R17 + 140/70 R17",oilGrade:"10W-40",oilCapacity:"约 2.1 L，含机滤约 2.4 L",chainSpec:"520",batteryModel:"12V 9Ah 级别",sparkPlug:"NGK CR7E 级别"}, tireInfo:{front:"110/80 R17",rear:"140/70 R17",alternatives:["前 120/70 R17 需确认操控变化","后 150/60 R17 需确认轮圈适配"],commuting:"耐磨通勤胎，重视湿地表现",sport:"运动旅行胎，保留车重下的稳定性",touring:"长里程旅行胎或轻度全地形胎"}, maintenanceInfo:{oilViscosity:"10W-40",oilVolume:"约 2.1-2.4 L",oilFilter:"建议隔次或按保养手册更换",brakeFluid:"DOT 4",coolant:"乙二醇基长效冷却液",chainLube:"摩旅和雨天后及时清洁补油",airFilter:"纸质滤芯，灰尘路况缩短周期"}, buyingAdvice:{beginnerFriendly:"高，动力温和但车重明显，低速挪车要适应",commonIssues:["高里程通勤磨损","长途加装件线路凌乱","倒车导致护杠和外壳划伤"],riskLevel:"低",bargainingPoints:["轮胎方胎","链条牙盘磨损","加装电路","箱架护杠变形"],priority:["手续一致性","车架和护杠变形","电路加装","轮胎链条"]} },
+  { slug:"kawasaki-ninja-400", name:"川崎 Ninja 400", brand:"川崎", model:"Ninja 400", aliases:["Kawasaki Ninja 400","川崎Ninja400","忍者400","Ninja400"], basic:{brand:"川崎",model:"Ninja 400",displacement:"399 cc",engineType:"直列双缸，水冷，DOHC",seatHeight:"约 785 mm",curbWeight:"约 168 kg",fuelTank:"约 14 L",frontWheel:"110/70 R17",rearWheel:"150/60 R17",oemTires:"110/70 R17 + 150/60 R17",oilGrade:"10W-40",oilCapacity:"约 2.0 L，含机滤约 2.3 L",chainSpec:"520",batteryModel:"12V 8Ah 级别",sparkPlug:"NGK LMAR9G 级别"}, tireInfo:{front:"110/70 R17",rear:"150/60 R17",alternatives:["前 120/70 R17 需确认轮圈和 ABS 标定影响","后 160/60 R17 需确认链条和后摇臂间隙"],commuting:"运动通勤胎，兼顾湿地和寿命",sport:"高抓运动街胎，适合山路节奏",touring:"运动旅行胎，提升长途耐磨和雨天信心"}, maintenanceInfo:{oilViscosity:"10W-40",oilVolume:"约 2.0-2.3 L",oilFilter:"建议每次或隔次更换",brakeFluid:"DOT 4",coolant:"乙二醇基长效冷却液",chainLube:"500-800 km 清洁补油，高速或雨后缩短周期",airFilter:"纸质滤芯，可按使用环境提前更换"}, buyingAdvice:{beginnerFriendly:"中高，坐高友好但动力响应积极",commonIssues:["摔车修复件","高转激烈驾驶磨损","改装排气和外观件影响车况判断"],riskLevel:"中",bargainingPoints:["外壳色差","脚踏和手把摔痕","轮胎边缘磨损","改装件是否保留原厂件"],priority:["手续一致性","摔车痕迹","发动机和水箱","刹车轮胎"]} }
+];
+const checklist = ["发动机冷车启动是否顺畅","怠速是否稳定","是否有异响","车架是否有摔车痕迹","前后减震是否漏油","刹车盘是否磨损严重","链条和牙盘是否磨损","轮胎年份和磨损程度","仪表公里数是否合理","车架号、发动机号、手续是否一致"];
+const wearParts = ["机油|查看油色、油位和保养记录，冷车启动后听润滑噪音。|3000-5000 km","机滤|询问上次更换记录，观察机滤外壳是否渗油。|随机油或隔次更换","空滤|查看进气盒和滤芯灰尘，灰尘路况缩短周期。|8000-12000 km","火花塞|冷车启动困难、加速顿挫时重点检查。|12000-20000 km","刹车片|看摩擦片厚度，试车确认刹车手感是否线性。|按磨损更换","刹车油|观察油色是否发深，捏刹车是否发软。|1-2 年","链条|检查松紧、死节、锈蚀和调节刻度是否到极限。|15000-25000 km","前后牙盘|观察齿尖是否变尖、偏磨或有缺齿。|随链条状态","轮胎|看胎纹、偏磨、补胎痕迹和 DOT 年份。|3-5 年或磨耗线","电瓶|冷启动电压和启动马达转速是否正常。|2-4 年","冷却液|查看副水壶液位、颜色和水箱渗漏痕迹。|2 年左右"].map(x=>{const [name,checkMethod,interval]=x.split("|");return {name,checkMethod,interval};});
+const labels = {brand:"品牌",model:"车型",displacement:"排量",engineType:"发动机类型",seatHeight:"座高",curbWeight:"整备质量",fuelTank:"油箱容量",frontWheel:"前轮规格",rearWheel:"后轮规格",oemTires:"原厂轮胎规格",oilGrade:"推荐机油标号",oilCapacity:"推荐机油容量",chainSpec:"链条规格",batteryModel:"电瓶型号",sparkPlug:"火花塞型号"};
+const maintLabels = {oilViscosity:"推荐机油粘度",oilVolume:"单次机油用量",oilFilter:"是否需要更换机滤",brakeFluid:"推荐刹车油规格",coolant:"推荐冷却液类型",chainLube:"链条油建议",airFilter:"空滤类型"};
+function normalize(v){ return String(v).toLowerCase().replace(/[\s\-_./]/g,"").trim(); }
+function findMoto(q){ const nq=normalize(q); if(!nq) return null; return motorcycles.map(m=>{const hay=[m.name,m.brand,m.model,m.slug,...m.aliases]; const exact=hay.some(x=>normalize(x)===nq); const partial=hay.some(x=>normalize(x).includes(nq)||nq.includes(normalize(x))); return {m,score:exact?100:partial?60:0};}).sort((a,b)=>b.score-a.score)[0]?.score ? motorcycles.map(m=>({m,score:[m.name,m.brand,m.model,m.slug,...m.aliases].some(x=>normalize(x)===nq)?100:[m.name,m.brand,m.model,m.slug,...m.aliases].some(x=>normalize(x).includes(nq)||nq.includes(normalize(x)))?60:0})).sort((a,b)=>b.score-a.score)[0].m : null; }
+function row(label,value){ return `<div class="row"><span>${label}</span><span>${value}</span></div>`; }
+function panel(title, html, alt=false){ return `<section class="panel ${alt?'alt':''}"><h3>${title}</h3>${html}</section>`; }
+function renderMoto(m){ document.getElementById('home').style.display='none'; document.getElementById('result').style.display='block'; document.querySelectorAll('[data-search] input').forEach(i=>i.value=m.name); const b=m.basic, t=m.tireInfo, ma=m.maintenanceInfo, ad=m.buyingAdvice; document.getElementById('resultContent').innerHTML = `<section class="summary"><div><p>${m.brand}</p><h2>${m.model}</h2><div class="desc">面向二手购买现场的参数、耗材和风险参考。</div></div><span class="risk">风险 ${ad.riskLevel}</span></section>` + panel('基础车辆数据', `<div class="kv two">${Object.keys(labels).map(k=>row(labels[k],b[k])).join('')}</div>`) + panel('二手车验车重点', `<div class="checks">${checklist.map(x=>`<label class="check"><input type="checkbox"><span>${x}</span></label>`).join('')}</div>`, true) + panel('易损耗配件检查', `<div class="parts">${wearParts.map(p=>`<article class="part"><div class="part-head"><h4>${p.name}</h4><em>${p.interval}</em></div><p>${p.checkMethod}</p></article>`).join('')}</div>`) + panel('可用轮胎信息', `<div class="kv">${row('前轮规格',t.front)}${row('后轮规格',t.rear)}${row('可替换规格',t.alternatives.join(' / '))}</div><div class="chips"><div class="chip"><b>通勤</b>${t.commuting}</div><div class="chip orange"><b>跑山</b>${t.sport}</div><div class="chip blue"><b>长途摩旅</b>${t.touring}</div></div>`, true) + panel('保养用品数据', `<div class="kv">${Object.keys(maintLabels).map(k=>row(maintLabels[k],ma[k])).join('')}</div>`) + panel('购买建议', `<div class="kv">${row('适合新手程度',ad.beginnerFriendly)}${row('常见问题',ad.commonIssues.join('；'))}${row('二手购买风险等级',ad.riskLevel)}${row('重点砍价点',ad.bargainingPoints.join('；'))}${row('建议验车优先级',ad.priority.join(' > '))}</div>`, true); window.scrollTo({top:0,behavior:'smooth'}); }
+function doSearch(q){ const m=findMoto(q); const nf=document.getElementById('notFound'); if(m){ nf.style.display='none'; renderMoto(m); } else { nf.style.display='block'; nf.innerHTML=`<strong>暂未收录“${q.trim() || '该车型'}”</strong><br><span>可提交车型需求，后续会补充该车型数据。</span>`; document.getElementById('home').style.display='block'; document.getElementById('result').style.display='none'; } }
+document.getElementById('modelGrid').innerHTML = motorcycles.map(m=>`<button class="model-card" data-model="${m.name}"><span>${m.brand}</span><strong>${m.model}</strong><small>${m.basic.displacement}</small></button>`).join('');
+document.querySelectorAll('[data-model]').forEach(btn=>btn.addEventListener('click',()=>doSearch(btn.dataset.model)));
+document.querySelectorAll('[data-search]').forEach(form=>form.addEventListener('submit',e=>{e.preventDefault(); doSearch(form.querySelector('input').value);}));
+document.getElementById('backBtn').addEventListener('click',()=>{document.getElementById('result').style.display='none';document.getElementById('home').style.display='block';window.scrollTo({top:0,behavior:'smooth'});});
+</script>
+</body>
+</html>
